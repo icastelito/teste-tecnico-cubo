@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lembrete de Lançamento</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .movie-title {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+      .release-date {
+        font-size: 18px;
+        color: #667eea;
+        margin-bottom: 20px;
+      }
+      .message {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 30px;
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+      .footer {
+        background-color: #f8f9fa;
+        padding: 20px;
+        text-align: center;
+        color: #999;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Lembrete de Lançamento</h1>
+      </div>
+      <div class="content">
+        <div class="movie-title">{{movieTitle}}</div>
+        <div class="release-date">Lançamento em {{releaseDate}}</div>
+        <div class="message">
+          <p>Olá!</p>
+          <p>
+            Este é um lembrete de que o filme <strong>{{movieTitle}}</strong> que você adicionou à
+            sua lista será lançado em breve!
+          </p>
+          <p>Não perca a oportunidade de assistir a este filme incrível.</p>
+        </div>
+        <a href="{{appUrl}}" class="button">Acessar Cubes Movies</a>
+      </div>
+      <div class="footer">
+        <p>© 2025 Cubes Movies - Sua plataforma de gerenciamento de filmes</p>
+        <p>Este é um email automático, por favor não responda.</p>
+      </div>
+    </div>
+  </body>
+</html>

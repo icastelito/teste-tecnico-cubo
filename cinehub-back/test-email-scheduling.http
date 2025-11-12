@@ -1,0 +1,71 @@
+### Teste de Agendamento de Email
+
+# 1. Registrar usuário
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Teste User",
+  "email": "teste@cubesmovies.com",
+  "password": "Teste123"
+}
+
+###
+
+# 2. Login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "teste@cubesmovies.com",
+  "password": "Teste123"
+}
+
+###
+
+# 3. Criar filme com data futura (lançamento daqui a 2 minutos para teste)
+# Substitua {TOKEN} pelo access_token do login
+POST http://localhost:3000/api/movies
+Content-Type: application/json
+Authorization: Bearer {TOKEN}
+
+{
+  "title": "Vingadores: Guerra Infinita",
+  "originalTitle": "Avengers: Infinity War",
+  "description": "Os Vingadores e seus aliados devem estar dispostos a sacrificar tudo em uma tentativa de derrotar o poderoso Thanos antes que seu ataque de devastação e ruína acabe com o universo.",
+  "releaseDate": "2025-11-09T14:07:00.000Z",
+  "duration": 149,
+  "budget": 300000000,
+  "revenue": 2048000000,
+  "genres": ["Action", "Adventure", "Science Fiction"],
+  "productionCompanies": ["Marvel Studios"],
+  "spokenLanguages": ["en"],
+  "voteAverage": 8.3,
+  "voteCount": 28000,
+  "popularity": 145.678
+}
+
+###
+
+# 4. Verificar filme criado
+GET http://localhost:3000/api/movies
+Authorization: Bearer {TOKEN}
+
+###
+
+# 5. Deletar filme (para testar cancelamento de job)
+# Substitua {MOVIE_ID} pelo ID do filme criado
+DELETE http://localhost:3000/api/movies/{MOVIE_ID}
+Authorization: Bearer {TOKEN}
+
+###
+
+# 6. Atualizar data de lançamento (para testar reagendamento)
+# Substitua {MOVIE_ID} pelo ID do filme
+PATCH http://localhost:3000/api/movies/{MOVIE_ID}
+Content-Type: application/json
+Authorization: Bearer {TOKEN}
+
+{
+  "releaseDate": "2025-11-09T14:10:00.000Z"
+}

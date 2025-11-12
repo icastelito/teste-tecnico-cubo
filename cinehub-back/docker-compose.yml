@@ -1,0 +1,36 @@
+# Docker Compose para ambiente de desenvolvimento
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: cubosmovies-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cubosmovies
+      POSTGRES_PASSWORD: cubosmovies123
+      POSTGRES_DB: cubosmovies
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: cubosmovies-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: cubosmovies-mailhog
+    restart: unless-stopped
+    ports:
+      - '1025:1025' # SMTP
+      - '8025:8025' # Web UI
+
+volumes:
+  postgres_data:
+  redis_data:

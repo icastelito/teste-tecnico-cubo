@@ -1,0 +1,57 @@
+### Variáveis
+@baseUrl = http://localhost:3000
+@token = SEU_TOKEN_JWT_AQUI
+@movieId = ID_DO_FILME_AQUI
+
+### 1. Criar um filme para testar
+POST {{baseUrl}}/movies
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Teste Upload Imagens",
+  "releaseDate": "2025-12-31T00:00:00.000Z",
+  "rating": 8.5,
+  "genre": "Ação"
+}
+
+### 2. Upload de Poster
+POST {{baseUrl}}/movies/{{movieId}}/poster
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="file"; filename="poster.jpg"
+Content-Type: image/jpeg
+
+< ./path/to/your/poster.jpg
+------WebKitFormBoundary--
+
+### 3. Upload de Backdrop
+POST {{baseUrl}}/movies/{{movieId}}/backdrop
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="file"; filename="backdrop.jpg"
+Content-Type: image/jpeg
+
+< ./path/to/your/backdrop.jpg
+------WebKitFormBoundary--
+
+### 4. Verificar se as URLs foram salvas
+GET {{baseUrl}}/movies/{{movieId}}
+Authorization: Bearer {{token}}
+
+###
+# ALTERNATIVA: Usando cURL (copie e cole no terminal)
+
+# Upload Poster
+curl -X POST http://localhost:3000/movies/SEU_MOVIE_ID/poster \
+  -H "Authorization: Bearer SEU_TOKEN" \
+  -F "file=@./caminho/para/poster.jpg"
+
+# Upload Backdrop
+curl -X POST http://localhost:3000/movies/SEU_MOVIE_ID/backdrop \
+  -H "Authorization: Bearer SEU_TOKEN" \
+  -F "file=@./caminho/para/backdrop.jpg"

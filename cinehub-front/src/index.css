@@ -1,0 +1,156 @@
+/* Importar Radix Colors */
+@import "@radix-ui/colors/gray.css";
+@import "@radix-ui/colors/gray-dark.css";
+@import "@radix-ui/colors/gray-alpha.css";
+@import "@radix-ui/colors/gray-dark-alpha.css";
+@import "@radix-ui/colors/purple.css";
+@import "@radix-ui/colors/purple-dark.css";
+@import "@radix-ui/colors/purple-alpha.css";
+@import "@radix-ui/colors/purple-dark-alpha.css";
+@import "@radix-ui/colors/red.css";
+@import "@radix-ui/colors/red-dark.css";
+@import "@radix-ui/colors/green.css";
+@import "@radix-ui/colors/green-dark.css";
+@import "@radix-ui/colors/amber.css";
+@import "@radix-ui/colors/amber-dark.css";
+
+/* Tema Claro - Mapear Radix Colors para variáveis customizadas */
+:root,
+.light-theme,
+[data-theme="light"] {
+	/* Backgrounds - usando Gray scale do Radix */
+	--color-bg-primary: var(--gray-1);
+	--color-bg-secondary: var(--gray-2);
+	--color-bg-tertiary: var(--gray-3);
+	--color-bg-overlay: rgba(0, 0, 0, 0.3);
+
+	/* Textos - usando Gray scale do Radix */
+	--color-text-primary: var(--gray-12);
+	--color-text-secondary: var(--gray-11);
+	--color-text-tertiary: var(--gray-10);
+
+	/* Primária - usando Purple scale do Radix */
+	--color-primary-main: var(--purple-9);
+	--color-primary-hover: var(--purple-10);
+	--color-primary-active: var(--purple-11);
+	--color-primary: var(--purple-9);
+
+	/* Inputs - usando Gray e Purple scale do Radix */
+	--color-input-bg: var(--gray-1);
+	--color-input-border: var(--gray-6);
+	--color-input-border-focus: var(--purple-8);
+	--color-input-placeholder: var(--gray-9);
+
+	/* Status - usando Red, Green, Amber do Radix */
+	--color-error: var(--red-9);
+	--color-error-bg: var(--red-3);
+	--color-success: var(--green-9);
+	--color-warning: var(--amber-9);
+
+	/* Design tokens */
+	--border-radius-sm: 1px;
+	--border-radius-md: 2px;
+	--border-radius-lg: 3px;
+
+	--font-size-xs: 0.75rem;
+	--font-size-sm: 0.875rem;
+	--font-size-md: 1rem;
+	--font-size-lg: 1.125rem;
+	--font-size-xl: 1.25rem;
+	--font-size-xxl: 1.5rem;
+}
+
+/* Tema Escuro - Mapear Radix Colors Dark para variáveis customizadas */
+.dark-theme,
+[data-theme="dark"] {
+	/* Backgrounds - usando Gray Dark scale do Radix */
+	--color-bg-primary: var(--gray-1);
+	--color-bg-secondary: var(--gray-2);
+	--color-bg-tertiary: var(--gray-3);
+	--color-bg-overlay: rgba(0, 0, 0, 0.5);
+
+	/* Textos - usando Gray Dark scale do Radix */
+	--color-text-primary: var(--gray-12);
+	--color-text-secondary: var(--gray-11);
+	--color-text-tertiary: var(--gray-10);
+
+	/* Primária - usando Purple Dark scale do Radix */
+	--color-primary-main: var(--purple-9);
+	--color-primary-hover: var(--purple-10);
+	--color-primary-active: var(--purple-11);
+	--color-primary: var(--purple-9);
+
+	/* Inputs - usando Gray Dark e Purple Dark scale do Radix */
+	--color-input-bg: var(--gray-3);
+	--color-input-border: var(--gray-6);
+	--color-input-border-focus: var(--purple-8);
+	--color-input-placeholder: var(--gray-9);
+
+	/* Status - usando Red Dark, Green Dark, Amber Dark do Radix */
+	--color-error: var(--red-9);
+	--color-error-bg: var(--red-3);
+	--color-success: var(--green-9);
+	--color-warning: var(--amber-9);
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+:root {
+	font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+		sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
+
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+body {
+	margin: 0;
+	min-width: 320px;
+	min-height: 100vh;
+	background-color: var(--color-bg-primary);
+	color: var(--color-text-primary);
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root {
+	min-height: 100vh;
+}
+
+a {
+	color: var(--color-primary-main);
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+a:hover {
+	color: var(--color-primary-hover);
+}
+
+button {
+	font-family: inherit;
+}
+
+input,
+textarea,
+select {
+	font-family: inherit;
+}
+
+/* Manter cor de fundo dos inputs com autofill e conteúdo */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	-webkit-text-fill-color: var(--color-text-primary) !important;
+	-webkit-box-shadow: 0 0 0 1000px var(--color-input-bg) inset !important;
+	box-shadow: 0 0 0 1000px var(--color-input-bg) inset !important;
+	transition: background-color 5000s ease-in-out 0s;
+}

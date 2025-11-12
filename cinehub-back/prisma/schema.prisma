@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  movies Movie[]
+
+  @@index([email]) // Índice para buscas por email
+  @@index([createdAt]) // Índice para ordenação por data de criação
+  @@map("users")
+}
+
+model Movie {
+  id               String    @id @default(uuid())
+  title            String
+  originalTitle    String?   @map("original_title")
+  subtitle         String?
+  description      String    @db.Text
+  releaseDate      DateTime  @map("release_date")
+  duration         Int       // em minutos
+  status           String?   // Lançado, post-production, etc
+  ageRating        String?   @map("age_rating") // G, PG, PG-13, R, NC-17, etc
+  budget           Decimal?  @db.Decimal(15, 2)
+  revenue          Decimal?  @db.Decimal(15, 2)
+  profit           Decimal?  @db.Decimal(15, 2)
+  posterUrl        String?   @map("poster_url")
+  backdropUrl      String?   @map("backdrop_url")
+  trailerUrl       String?   @map("trailer_url")
+  genres           String[]  // Array de strings para os gêneros
+  productionCompanies String[] @map("production_companies")
+  spokenLanguages  String[]  @map("spoken_languages")
+  voteAverage      Decimal?  @map("vote_average") @db.Decimal(3, 1)
+  voteCount        Int?      @map("vote_count")
+  popularity       Decimal?  @db.Decimal(10, 3)
+  
+  userId           String    @map("user_id")
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  // Índices simples
+  @@index([userId]) // Buscar filmes por usuário
+  @@index([releaseDate]) // Filtrar por data de lançamento
+  @@index([title]) // Buscar por título
+  @@index([duration]) // Filtrar por duração
+  @@index([popularity]) // Ordenar por popularidade
+  @@index([voteAverage]) // Ordenar por avaliação
+  
+  // Índices compostos para queries otimizadas
+  @@index([userId, releaseDate]) // Filmes de um usuário ordenados por data
+  @@index([userId, title]) // Buscar filmes de um usuário por título
+  @@index([releaseDate, duration]) // Filtrar por data e duração simultaneamente
+  
+  @@map("movies")
+}
