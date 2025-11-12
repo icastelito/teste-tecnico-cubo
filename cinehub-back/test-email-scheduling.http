@@ -1,7 +1,7 @@
 ### Teste de Agendamento de Email
 
 # 1. Registrar usuário
-POST http://localhost:3000/api/auth/register
+POST http://localhost:3001/api/auth/register
 Content-Type: application/json
 
 {
@@ -13,7 +13,7 @@ Content-Type: application/json
 ###
 
 # 2. Login
-POST http://localhost:3000/api/auth/login
+POST http://localhost:3001/api/auth/login
 Content-Type: application/json
 
 {
@@ -25,7 +25,7 @@ Content-Type: application/json
 
 # 3. Criar filme com data futura (lançamento daqui a 2 minutos para teste)
 # Substitua {TOKEN} pelo access_token do login
-POST http://localhost:3000/api/movies
+POST http://localhost:3001/api/movies
 Content-Type: application/json
 Authorization: Bearer {TOKEN}
 
@@ -48,21 +48,21 @@ Authorization: Bearer {TOKEN}
 ###
 
 # 4. Verificar filme criado
-GET http://localhost:3000/api/movies
+GET http://localhost:3001/api/movies
 Authorization: Bearer {TOKEN}
 
 ###
 
 # 5. Deletar filme (para testar cancelamento de job)
 # Substitua {MOVIE_ID} pelo ID do filme criado
-DELETE http://localhost:3000/api/movies/{MOVIE_ID}
+DELETE http://localhost:3001/api/movies/{MOVIE_ID}
 Authorization: Bearer {TOKEN}
 
 ###
 
 # 6. Atualizar data de lançamento (para testar reagendamento)
 # Substitua {MOVIE_ID} pelo ID do filme
-PATCH http://localhost:3000/api/movies/{MOVIE_ID}
+PATCH http://localhost:3001/api/movies/{MOVIE_ID}
 Content-Type: application/json
 Authorization: Bearer {TOKEN}
 

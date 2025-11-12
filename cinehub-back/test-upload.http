@@ -1,5 +1,5 @@
 ### Variáveis
-@baseUrl = http://localhost:3000
+@baseUrl = http://localhost:3001
 @token = SEU_TOKEN_JWT_AQUI
 @movieId = ID_DO_FILME_AQUI
 
@@ -47,11 +47,11 @@ Authorization: Bearer {{token}}
 # ALTERNATIVA: Usando cURL (copie e cole no terminal)
 
 # Upload Poster
-curl -X POST http://localhost:3000/movies/SEU_MOVIE_ID/poster \
+curl -X POST http://localhost:3001/movies/SEU_MOVIE_ID/poster \
   -H "Authorization: Bearer SEU_TOKEN" \
   -F "file=@./caminho/para/poster.jpg"
 
 # Upload Backdrop
-curl -X POST http://localhost:3000/movies/SEU_MOVIE_ID/backdrop \
+curl -X POST http://localhost:3001/movies/SEU_MOVIE_ID/backdrop \
   -H "Authorization: Bearer SEU_TOKEN" \
   -F "file=@./caminho/para/backdrop.jpg"

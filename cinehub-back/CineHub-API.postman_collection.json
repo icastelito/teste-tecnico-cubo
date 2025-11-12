@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "CineHub API",
-    "description": "API completa do CineHub - Sistema de gerenciamento de filmes\n\n**Base URL:** http://localhost:3001\n\n**Autenticação:** JWT Bearer Token\n\n**Fluxo:**\n1. Registrar usuário (POST /api/auth/register)\n2. Fazer login (POST /api/auth/login) - guarda o token\n3. Usar token em todas as outras rotas protegidas",
+    "description": "API completa do CineHub - Sistema de gerenciamento de filmes\n\n**Base URL:** http://localhost:3000\n\n**Autenticação:** JWT Bearer Token\n\n**Fluxo:**\n1. Registrar usuário (POST /api/auth/register)\n2. Fazer login (POST /api/auth/login) - guarda o token\n3. Usar token em todas as outras rotas protegidas",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "cinehub"
   },
@@ -503,7 +503,7 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "http://localhost:3001",
+      "value": "http://localhost:3000",
       "type": "string"
     },
     {

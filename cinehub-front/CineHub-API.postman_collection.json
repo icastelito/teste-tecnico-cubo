@@ -1,525 +1,525 @@
 {
-  "info": {
-    "name": "CineHub API",
-    "description": "API completa do CineHub - Sistema de gerenciamento de filmes\n\n**Base URL:** http://localhost:3001\n\n**Autenticação:** JWT Bearer Token\n\n**Fluxo:**\n1. Registrar usuário (POST /api/auth/register)\n2. Fazer login (POST /api/auth/login) - guarda o token\n3. Usar token em todas as outras rotas protegidas",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "cinehub"
-  },
-  "item": [
-    {
-      "name": "Auth",
-      "item": [
-        {
-          "name": "Register",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 201) {",
-                  "    const jsonData = pm.response.json();",
-                  "    pm.environment.set(\"access_token\", jsonData.access_token);",
-                  "    pm.environment.set(\"user_id\", jsonData.user.id);",
-                  "    console.log(\"Token saved:\", jsonData.access_token);",
-                  "}"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Seu Nome\",\n  \"email\": \"seu.email@example.com\",\n  \"password\": \"SuaSenha123\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/auth/register",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "register"]
-            },
-            "description": "Registra um novo usuário no sistema.\n\n**Validações:**\n- Nome: obrigatório, mínimo 3 caracteres\n- Email: obrigatório, formato válido, único\n- Senha: obrigatório, mínimo 8 caracteres, deve conter letra maiúscula, minúscula e número\n\n**Retorno:** Token JWT + dados do usuário"
-          },
-          "response": []
-        },
-        {
-          "name": "Login",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 200) {",
-                  "    const jsonData = pm.response.json();",
-                  "    pm.environment.set(\"access_token\", jsonData.access_token);",
-                  "    pm.environment.set(\"user_id\", jsonData.user.id);",
-                  "    console.log(\"Token saved:\", jsonData.access_token);",
-                  "}"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"seu.email@example.com\",\n  \"password\": \"SuaSenha123\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login"]
-            },
-            "description": "Autentica usuário e retorna token JWT.\n\n**Retorno:** Token JWT + dados do usuário\n\n**O token é automaticamente salvo no environment para uso nas próximas requisições.**"
-          },
-          "response": []
-        }
-      ],
-      "description": "Endpoints de autenticação (registro e login)"
-    },
-    {
-      "name": "Movies",
-      "item": [
-        {
-          "name": "Create Movie",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Homem-Aranha: Através do Aranhaverso\",\n  \"description\": \"Miles Morales retorna para o próximo capítulo da saga do Aranhaverso, uma aventura épica que transportará o Homem-Aranha em tempo integral e amigável do bairro do Brooklyn através do Multiverso.\",\n  \"releaseDate\": \"2024-06-02T00:00:00.000Z\",\n  \"duration\": 140,\n  \"genres\": [\"Animação\", \"Ação\", \"Aventura\"],\n  \"productionCompanies\": [\"Sony Pictures Animation\", \"Marvel Entertainment\"],\n  \"spokenLanguages\": [\"Inglês\", \"Espanhol\"]\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/movies",
-              "host": ["{{base_url}}"],
-              "path": ["api", "movies"]
-            },
-            "description": "Cria um novo filme.\n\n**Campos obrigatórios:**\n- title (string, min 3)\n- description (string, min 10)\n- releaseDate (ISO 8601)\n- duration (number, min 1)\n- genres (array, min 1 item)\n\n**Campos opcionais:**\n- productionCompanies (array)\n- spokenLanguages (array)\n\n**Agendamento automático:** Se releaseDate for futura, um email será agendado para a data de lançamento."
-          },
-          "response": []
-        },
-        {
-          "name": "List Movies (All)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/movies?page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "movies"],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1",
-                  "description": "Número da página (default: 1)"
-                },
-                {
-                  "key": "limit",
-                  "value": "10",
-                  "description": "Itens por página (default: 10)"
-                }
-              ]
-            },
-            "description": "Lista todos os filmes do usuário autenticado com paginação.\n\n**Query params opcionais:**\n- page (number, default: 1)\n- limit (number, default: 10)\n- sortBy (releaseDate|title, default: releaseDate)\n- sortOrder (asc|desc, default: desc)"
-          },
-          "response": []
-        },
-        {
-          "name": "List Movies (Search)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/movies?search=aranha",
-              "host": ["{{base_url}}"],
-              "path": ["api", "movies"],
-              "query": [
-                {
-                  "key": "search",
-                  "value": "aranha",
-                  "description": "Busca no título (case-insensitive)"
-                }
-              ]
-            },
-            "description": "Busca filmes por título (case-insensitive, busca parcial)."
-          },
-          "response": []
-        },
-        {
-          "name": "List Movies (Filter Duration)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/movies?minDuration=90&maxDuration=150",
-              "host": ["{{base_url}}"],
-              "path": ["api", "movies"],
-              "query": [
-                {
-                  "key": "minDuration",
-                  "value": "90",
-                  "description": "Duração mínima em minutos"
-                },
-                {
-                  "key": "maxDuration",
-                  "value": "150",
-                  "description": "Duração máxima em minutos"
-                }
-              ]
-            },
-            "description": "Filtra filmes por duração (em minutos).\n\n**Filtro obrigatório do base.md**"
-          },
-          "response": []
-        },
-        {
-          "name": "List Movies (Filter Date)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/movies?startDate=2024-01-01&endDate=2024-12-31",
-              "host": ["{{base_url}}"],
-              "path": ["api", "movies"],
-              "query": [
-                {
-                  "key": "startDate",
-                  "value": "2024-01-01",
-                  "description": "Data inicial (YYYY-MM-DD)"
-                },
-                {
-                  "key": "endDate",
-                  "value": "2024-12-31",
-                  "description": "Data final (YYYY-MM-DD)"
-                }
-              ]
-            },
-            "description": "Filtra filmes por período de lançamento.\n\n**Filtro obrigatório do base.md**"
-          },
-          "response": []
-        },
-        {
-          "name": "List Movies (Filter Genre)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/movies?genre=Ação",
-              "host": ["{{base_url}}"],
-              "path": ["api", "movies"],
-              "query": [
-                {
-                  "key": "genre",
-                  "value": "Ação",
-                  "description": "Gênero do filme"
-                }
-              ]
-            },
-            "description": "Filtra filmes por gênero.\n\n**Filtro adicional do base.md**"
-          },
-          "response": []
-        },
-        {
-          "name": "List Movies (Combined Filters)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/movies?search=homem&minDuration=120&genre=Ação&startDate=2024-01-01&page=1&limit=10&sortBy=releaseDate&sortOrder=desc",
-              "host": ["{{base_url}}"],
-              "path": ["api", "movies"],
-              "query": [
-                {
-                  "key": "search",
-                  "value": "homem"
-                },
-                {
-                  "key": "minDuration",
-                  "value": "120"
-                },
-                {
-                  "key": "genre",
-                  "value": "Ação"
-                },
-                {
-                  "key": "startDate",
-                  "value": "2024-01-01"
-                },
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "10"
-                },
-                {
-                  "key": "sortBy",
-                  "value": "releaseDate"
-                },
-                {
-                  "key": "sortOrder",
-                  "value": "desc"
-                }
-              ]
-            },
-            "description": "Exemplo de uso combinado de múltiplos filtros."
-          },
-          "response": []
-        },
-        {
-          "name": "Get Movie by ID",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/movies/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "movies", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{movie_id}}",
-                  "description": "UUID do filme"
-                }
-              ]
-            },
-            "description": "Busca um filme específico por ID.\n\n**Regra:** Apenas o dono do filme pode visualizar."
-          },
-          "response": []
-        },
-        {
-          "name": "Update Movie",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Título Atualizado\",\n  \"description\": \"Nova descrição do filme\",\n  \"duration\": 145\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/movies/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "movies", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{movie_id}}",
-                  "description": "UUID do filme"
-                }
-              ]
-            },
-            "description": "Atualiza um filme existente (atualização parcial).\n\n**Regra:** Apenas o dono pode atualizar.\n\n**Todos os campos são opcionais.**\n\n**Reagendamento:** Se releaseDate for alterada, o email é reagendado automaticamente."
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Movie",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/movies/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "movies", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{movie_id}}",
-                  "description": "UUID do filme"
-                }
-              ]
-            },
-            "description": "Deleta um filme.\n\n**Regra:** Apenas o dono pode deletar.\n\n**Cancelamento automático:** O job de email agendado é cancelado."
-          },
-          "response": []
-        },
-        {
-          "name": "Upload Poster",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "file",
-                  "type": "file",
-                  "src": "/path/to/poster.jpg",
-                  "description": "Arquivo de imagem (JPEG, PNG, WEBP, max 5MB)"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{base_url}}/api/movies/:id/poster",
-              "host": ["{{base_url}}"],
-              "path": ["api", "movies", ":id", "poster"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{movie_id}}",
-                  "description": "UUID do filme"
-                }
-              ]
-            },
-            "description": "Upload de poster do filme para Cloudflare R2.\n\n**Validações:**\n- Tamanho máximo: 5MB\n- Formatos aceitos: JPEG, PNG, WEBP\n- Apenas o dono pode fazer upload\n\n**Comportamento:** Substitui o poster anterior se existir."
-          },
-          "response": []
-        },
-        {
-          "name": "Upload Backdrop",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "file",
-                  "type": "file",
-                  "src": "/path/to/backdrop.jpg",
-                  "description": "Arquivo de imagem (JPEG, PNG, WEBP, max 5MB)"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{base_url}}/api/movies/:id/backdrop",
-              "host": ["{{base_url}}"],
-              "path": ["api", "movies", ":id", "backdrop"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{movie_id}}",
-                  "description": "UUID do filme"
-                }
-              ]
-            },
-            "description": "Upload de backdrop (imagem de fundo) do filme para Cloudflare R2.\n\n**Validações:**\n- Tamanho máximo: 5MB\n- Formatos aceitos: JPEG, PNG, WEBP\n- Apenas o dono pode fazer upload\n\n**Comportamento:** Substitui o backdrop anterior se existir."
-          },
-          "response": []
-        }
-      ],
-      "description": "Endpoints de gerenciamento de filmes (CRUD + Upload)"
-    },
-    {
-      "name": "Health",
-      "item": [
-        {
-          "name": "Health Check",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/health",
-              "host": ["{{base_url}}"],
-              "path": ["health"]
-            },
-            "description": "Verifica status do servidor e conexões com serviços externos.\n\n**Retorna:**\n- status: ok/error\n- info: serviços funcionando\n- error: serviços com erro\n- details: detalhes de cada serviço"
-          },
-          "response": []
-        }
-      ],
-      "description": "Endpoint de saúde da API"
-    }
-  ],
-  "variable": [
-    {
-      "key": "base_url",
-      "value": "http://localhost:3001",
-      "type": "string"
-    },
-    {
-      "key": "access_token",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "user_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "movie_id",
-      "value": "",
-      "type": "string"
-    }
-  ]
+	"info": {
+		"name": "CineHub API",
+		"description": "API completa do CineHub - Sistema de gerenciamento de filmes\n\n**Base URL:** http://localhost:3000\n\n**Autenticação:** JWT Bearer Token\n\n**Fluxo:**\n1. Registrar usuário (POST /api/auth/register)\n2. Fazer login (POST /api/auth/login) - guarda o token\n3. Usar token em todas as outras rotas protegidas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "cinehub"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.environment.set(\"access_token\", jsonData.access_token);",
+									"    pm.environment.set(\"user_id\", jsonData.user.id);",
+									"    console.log(\"Token saved:\", jsonData.access_token);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Seu Nome\",\n  \"email\": \"seu.email@example.com\",\n  \"password\": \"SuaSenha123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						},
+						"description": "Registra um novo usuário no sistema.\n\n**Validações:**\n- Nome: obrigatório, mínimo 3 caracteres\n- Email: obrigatório, formato válido, único\n- Senha: obrigatório, mínimo 8 caracteres, deve conter letra maiúscula, minúscula e número\n\n**Retorno:** Token JWT + dados do usuário"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.environment.set(\"access_token\", jsonData.access_token);",
+									"    pm.environment.set(\"user_id\", jsonData.user.id);",
+									"    console.log(\"Token saved:\", jsonData.access_token);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"seu.email@example.com\",\n  \"password\": \"SuaSenha123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						},
+						"description": "Autentica usuário e retorna token JWT.\n\n**Retorno:** Token JWT + dados do usuário\n\n**O token é automaticamente salvo no environment para uso nas próximas requisições.**"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints de autenticação (registro e login)"
+		},
+		{
+			"name": "Movies",
+			"item": [
+				{
+					"name": "Create Movie",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Homem-Aranha: Através do Aranhaverso\",\n  \"description\": \"Miles Morales retorna para o próximo capítulo da saga do Aranhaverso, uma aventura épica que transportará o Homem-Aranha em tempo integral e amigável do bairro do Brooklyn através do Multiverso.\",\n  \"releaseDate\": \"2024-06-02T00:00:00.000Z\",\n  \"duration\": 140,\n  \"genres\": [\"Animação\", \"Ação\", \"Aventura\"],\n  \"productionCompanies\": [\"Sony Pictures Animation\", \"Marvel Entertainment\"],\n  \"spokenLanguages\": [\"Inglês\", \"Espanhol\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/movies",
+							"host": ["{{base_url}}"],
+							"path": ["api", "movies"]
+						},
+						"description": "Cria um novo filme.\n\n**Campos obrigatórios:**\n- title (string, min 3)\n- description (string, min 10)\n- releaseDate (ISO 8601)\n- duration (number, min 1)\n- genres (array, min 1 item)\n\n**Campos opcionais:**\n- productionCompanies (array)\n- spokenLanguages (array)\n\n**Agendamento automático:** Se releaseDate for futura, um email será agendado para a data de lançamento."
+					},
+					"response": []
+				},
+				{
+					"name": "List Movies (All)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/movies?page=1&limit=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "movies"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Número da página (default: 1)"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Itens por página (default: 10)"
+								}
+							]
+						},
+						"description": "Lista todos os filmes do usuário autenticado com paginação.\n\n**Query params opcionais:**\n- page (number, default: 1)\n- limit (number, default: 10)\n- sortBy (releaseDate|title, default: releaseDate)\n- sortOrder (asc|desc, default: desc)"
+					},
+					"response": []
+				},
+				{
+					"name": "List Movies (Search)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/movies?search=aranha",
+							"host": ["{{base_url}}"],
+							"path": ["api", "movies"],
+							"query": [
+								{
+									"key": "search",
+									"value": "aranha",
+									"description": "Busca no título (case-insensitive)"
+								}
+							]
+						},
+						"description": "Busca filmes por título (case-insensitive, busca parcial)."
+					},
+					"response": []
+				},
+				{
+					"name": "List Movies (Filter Duration)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/movies?minDuration=90&maxDuration=150",
+							"host": ["{{base_url}}"],
+							"path": ["api", "movies"],
+							"query": [
+								{
+									"key": "minDuration",
+									"value": "90",
+									"description": "Duração mínima em minutos"
+								},
+								{
+									"key": "maxDuration",
+									"value": "150",
+									"description": "Duração máxima em minutos"
+								}
+							]
+						},
+						"description": "Filtra filmes por duração (em minutos).\n\n**Filtro obrigatório do base.md**"
+					},
+					"response": []
+				},
+				{
+					"name": "List Movies (Filter Date)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/movies?startDate=2024-01-01&endDate=2024-12-31",
+							"host": ["{{base_url}}"],
+							"path": ["api", "movies"],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2024-01-01",
+									"description": "Data inicial (YYYY-MM-DD)"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-12-31",
+									"description": "Data final (YYYY-MM-DD)"
+								}
+							]
+						},
+						"description": "Filtra filmes por período de lançamento.\n\n**Filtro obrigatório do base.md**"
+					},
+					"response": []
+				},
+				{
+					"name": "List Movies (Filter Genre)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/movies?genre=Ação",
+							"host": ["{{base_url}}"],
+							"path": ["api", "movies"],
+							"query": [
+								{
+									"key": "genre",
+									"value": "Ação",
+									"description": "Gênero do filme"
+								}
+							]
+						},
+						"description": "Filtra filmes por gênero.\n\n**Filtro adicional do base.md**"
+					},
+					"response": []
+				},
+				{
+					"name": "List Movies (Combined Filters)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/movies?search=homem&minDuration=120&genre=Ação&startDate=2024-01-01&page=1&limit=10&sortBy=releaseDate&sortOrder=desc",
+							"host": ["{{base_url}}"],
+							"path": ["api", "movies"],
+							"query": [
+								{
+									"key": "search",
+									"value": "homem"
+								},
+								{
+									"key": "minDuration",
+									"value": "120"
+								},
+								{
+									"key": "genre",
+									"value": "Ação"
+								},
+								{
+									"key": "startDate",
+									"value": "2024-01-01"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "sortBy",
+									"value": "releaseDate"
+								},
+								{
+									"key": "sortOrder",
+									"value": "desc"
+								}
+							]
+						},
+						"description": "Exemplo de uso combinado de múltiplos filtros."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Movie by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/movies/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "movies", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{movie_id}}",
+									"description": "UUID do filme"
+								}
+							]
+						},
+						"description": "Busca um filme específico por ID.\n\n**Regra:** Apenas o dono do filme pode visualizar."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Movie",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Título Atualizado\",\n  \"description\": \"Nova descrição do filme\",\n  \"duration\": 145\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/movies/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "movies", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{movie_id}}",
+									"description": "UUID do filme"
+								}
+							]
+						},
+						"description": "Atualiza um filme existente (atualização parcial).\n\n**Regra:** Apenas o dono pode atualizar.\n\n**Todos os campos são opcionais.**\n\n**Reagendamento:** Se releaseDate for alterada, o email é reagendado automaticamente."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Movie",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/movies/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "movies", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{movie_id}}",
+									"description": "UUID do filme"
+								}
+							]
+						},
+						"description": "Deleta um filme.\n\n**Regra:** Apenas o dono pode deletar.\n\n**Cancelamento automático:** O job de email agendado é cancelado."
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Poster",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/path/to/poster.jpg",
+									"description": "Arquivo de imagem (JPEG, PNG, WEBP, max 5MB)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/movies/:id/poster",
+							"host": ["{{base_url}}"],
+							"path": ["api", "movies", ":id", "poster"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{movie_id}}",
+									"description": "UUID do filme"
+								}
+							]
+						},
+						"description": "Upload de poster do filme para Cloudflare R2.\n\n**Validações:**\n- Tamanho máximo: 5MB\n- Formatos aceitos: JPEG, PNG, WEBP\n- Apenas o dono pode fazer upload\n\n**Comportamento:** Substitui o poster anterior se existir."
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Backdrop",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/path/to/backdrop.jpg",
+									"description": "Arquivo de imagem (JPEG, PNG, WEBP, max 5MB)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/movies/:id/backdrop",
+							"host": ["{{base_url}}"],
+							"path": ["api", "movies", ":id", "backdrop"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{movie_id}}",
+									"description": "UUID do filme"
+								}
+							]
+						},
+						"description": "Upload de backdrop (imagem de fundo) do filme para Cloudflare R2.\n\n**Validações:**\n- Tamanho máximo: 5MB\n- Formatos aceitos: JPEG, PNG, WEBP\n- Apenas o dono pode fazer upload\n\n**Comportamento:** Substitui o backdrop anterior se existir."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints de gerenciamento de filmes (CRUD + Upload)"
+		},
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": ["{{base_url}}"],
+							"path": ["health"]
+						},
+						"description": "Verifica status do servidor e conexões com serviços externos.\n\n**Retorna:**\n- status: ok/error\n- info: serviços funcionando\n- error: serviços com erro\n- details: detalhes de cada serviço"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint de saúde da API"
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "movie_id",
+			"value": "",
+			"type": "string"
+		}
+	]
 }

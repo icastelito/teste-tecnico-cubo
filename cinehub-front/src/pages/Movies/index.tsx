@@ -51,7 +51,7 @@ export const Movies = () => {
 			const errorMessage = err.response?.data?.message || err.message || "Erro ao carregar filmes";
 			setError(errorMessage);
 			console.error("Erro detalhado:", err);
-			console.error("URL da API:", import.meta.env.VITE_API_URL || "http://localhost:3000/api");
+			console.error("URL da API:", import.meta.env.VITE_API_URL || "http://localhost:3001/api");
 		} finally {
 			setIsLoading(false);
 		}

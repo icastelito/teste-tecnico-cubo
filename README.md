@@ -137,7 +137,7 @@ R2_PUBLIC_URL="https://pub-xxxxx.r2.dev"
 
 # Application
 API_PREFIX="api"
-PORT=3001
+PORT=3000
 ```
 
 **Observações importantes:**
@@ -181,12 +181,12 @@ pnpm prisma:migrate
 pnpm start:dev
 ```
 
-O backend estará rodando em `http://localhost:3001`
+O backend estará rodando em `http://localhost:3000`
 
 Para verificar se está funcionando, acesse:
 
 ```
-http://localhost:3001/health
+http://localhost:3000/api/health
 ```
 
 ## Configuração do Frontend
@@ -211,7 +211,7 @@ cp .env.example .env
 Edite o arquivo `.env`:
 
 ```env
-VITE_API_URL=http://localhost:3001/api
+VITE_API_URL=http://localhost:3000/api
 ```
 
 ### 3. Iniciar o Frontend
@@ -315,7 +315,7 @@ docker-compose up -d
 
 ### Erro "Port already in use"
 
-Se a porta 3001 ou 5173 já estiver em uso, você pode:
+Se a porta 3000 ou 5173 já estiver em uso, você pode:
 
 1. Mudar a porta no arquivo `.env` do backend (PORT=3002)
 2. Ou finalizar o processo que está usando a porta
@@ -323,14 +323,14 @@ Se a porta 3001 ou 5173 já estiver em uso, você pode:
 **Windows:**
 
 ```powershell
-netstat -ano | findstr :3001
+netstat -ano | findstr :3000
 taskkill /PID <numero-do-pid> /F
 ```
 
 **Linux/macOS:**
 
 ```bash
-lsof -i :3001
+lsof -i :3000
 kill -9 <PID>
 ```
 
@@ -352,7 +352,7 @@ Para testar apenas localmente sem upload real, você pode comentar as validaçõ
 
 ### Frontend não consegue se comunicar com o backend
 
-1. Verifique se o backend está rodando em `http://localhost:3001`
+1. Verifique se o backend está rodando em `http://localhost:3000`
 2. Verifique se o `VITE_API_URL` no `.env` do frontend está correto
 3. Verifique o console do navegador para mensagens de erro de CORS
 
